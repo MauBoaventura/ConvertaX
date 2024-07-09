@@ -2,6 +2,7 @@
 import { TrendingsCard } from "@/components/custom/cards/trendingsCard";
 import { CustomLineChart } from "@/components/custom/charts/line";
 import { FormSchemaType, InvestmentForm } from "@/components/custom/form/createForm";
+import { ModeToggle } from "@/components/custom/modeToggle/modeToggle";
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 
@@ -24,6 +25,9 @@ export default function Investimento() {
           </div>
         </div>
 
+      </div>
+      <div className="fixed bottom-4 right-4">
+          <ModeToggle />
       </div>
     </div>
   );
