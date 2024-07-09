@@ -35,13 +35,13 @@ export type FormSchemaType = z.infer<typeof FormSchema>;
 // Define schema for investment form
 const FormSchema = z.object({
     owner: z.string().min(2, {
-        message: "Owner must be at least 2 characters.",
+        message: "O proprietário deve ter pelo menos 2 caracteres.",
     }),
     creationDate: z.date().max(new Date(), {
-        message: "Creation date cannot be in the future.",
+        message: "A data de criação não pode estar no futuro.",
     }),
     initialValue: z.number().min(0, {
-        message: "Initial value must be non-negative.",
+        message: "O valor inicial deve ser não negativo.",
     }),
 })
 
@@ -57,7 +57,7 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
     function onSubmit(data: z.infer<typeof FormSchema>) {
         setData(data)
         toast({
-            title: "You submitted the following values:",
+            title: "Você enviou os seguintes valores:",
             description: (
                 <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
                     <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -68,12 +68,12 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
     }
 
     useEffect(() => {
-        // Observe changes to initialValue
+        // Observar alterações no valor inicial
         const subscription = form.watch((value) => {
             setData({...data, initialValue: value.initialValue})
         });
 
-        // Cleanup subscription on unmount
+        // Limpar a assinatura ao desmontar
         return () => subscription.unsubscribe();
     }, [form]);
     return (
@@ -84,12 +84,12 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
                     name="owner"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Owner</FormLabel>
+                            <FormLabel>Proprietário</FormLabel>
                             <FormControl>
-                                <Input placeholder="Owner Name" {...field} />
+                                <Input placeholder="Nome do Proprietário" {...field} />
                             </FormControl>
                             <FormDescription>
-                                Enter the owners name.
+                                Insira o nome do proprietário.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -100,7 +100,7 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
                     name="creationDate"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
-                            <FormLabel>Date of birth</FormLabel>
+                            <FormLabel>Data inicial do investimento</FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
@@ -114,7 +114,7 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
                                             {field.value ? (
                                                 format(field.value, "PPP")
                                             ) : (
-                                                <span>Pick a date</span>
+                                                <span>Escolha uma data</span>
                                             )}
                                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                         </Button>
@@ -132,9 +132,6 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
                                     />
                                 </PopoverContent>
                             </Popover>
-                            <FormDescription>
-                                Your date of birth is used to calculate your age.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -144,7 +141,7 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
                     name="initialValue"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Initial Value</FormLabel>
+                            <FormLabel>Valor Inicial</FormLabel>
                             <FormControl>
                                 {/* <Input type="number" min="0" placeholder="0.00" {...field}
                                     onChange={(e) => field.onChange(parseFloat(e.target.value))} /> */}
@@ -158,18 +155,14 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
                                 />
                             </FormControl>
                             <FormDescription>
-                                Enter the initial value (non-negative).
+                                Insira o valor inicial (não negativo).
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit">Enviar</Button>
             </form>
         </Form>
     )
 }
-
-
-
-
