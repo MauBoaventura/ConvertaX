@@ -25,12 +25,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
-interface ResultadoInvestimento {
-    data: string;
-    valorReajustado: number;
-    inicial: number;
-}
+import { FormSchemaType } from "../form/compostForm"
+import { calcularJurosCompostos, formatarData } from "@/lib/utils"
 
 const chartConfig = {
     valorReajustado: {
@@ -43,54 +39,18 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function CustomLineChart({ initialInvestiment, mounthlydeposit}: { initialInvestiment: number, mounthlydeposit: number}) {
+export function CustomLineChart({ data }: { data: FormSchemaType }) {
+    const { initialValue: initialInvestiment, monthlyDeposit: mounthlydeposit, creationDate } = data
     const [timeRange, setTimeRange] = React.useState("1y")
 
 
-    function calcularJurosCompostos(
-        valorInicial: number,
-        dataInicial: string,
-        meses: number,
-        taxa: number = 0.0052
-    ): ResultadoInvestimento[] {
 
-        function formatarData(date: Date): string {
-            const ano = date.getFullYear();
-            const mes = String(date.getMonth() + 1).padStart(2, '0');
-            return `${ano}-${mes}-02`;
-        }
-
-        function calcular(
-            valor: number,
-            data: Date,
-            mesesRestantes: number,
-            resultado: ResultadoInvestimento[] = []
-        ): ResultadoInvestimento[] {
-            if (mesesRestantes === 0) {
-                return resultado;
-            }
-
-            const novoValor = (valor + mounthlydeposit) * (1 + taxa);
-            const novaData = new Date(data);
-            novaData.setMonth(novaData.getMonth() + 1);
-            resultado.push({
-                data: formatarData(novaData),
-                valorReajustado: parseFloat((valor + mounthlydeposit).toFixed(2)),
-                inicial: valorInicial
-            });
-
-            return calcular(novoValor, novaData, mesesRestantes - 1, resultado);
-        }
-
-        const dataInicialDate = new Date(dataInicial);
-        return calcular(valorInicial, dataInicialDate, meses);
-    }
-    const investimentoInicial = initialInvestiment ??  1000.00;
-    const dataInicial = '2024-07-01';
+    const investimentoInicial = initialInvestiment ?? 1000.00;
+    const dataInicial = formatarData(creationDate) ?? '2024-07-01';
     const meses = 24;
-
-    const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : timeRange === "5y" ? 60 : timeRange === "10y" ? 120 : timeRange === "15y" ? 180 : timeRange === "20y" ? 240 : 0);
-    
+    console.log(mounthlydeposit )
+    const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : timeRange === "5y" ? 60 : timeRange === "10y" ? 120 : timeRange === "15y" ? 180 : timeRange === "20y" ? 240 : 0, mounthlydeposit);
+    console.log('chartData> ', chartData)
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.data);
         const now = new Date();
