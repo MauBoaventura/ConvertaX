@@ -90,7 +90,7 @@ export function CustomLineChart({ initialInvestiment }: { initialInvestiment: nu
     const dataInicial = '2024-07-01';
     const meses = 24;
 
-    const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : 60);
+    const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : timeRange === "5y" ? 60 : timeRange === "10y" ? 120 : timeRange === "15y" ? 180 : timeRange === "20y" ? 240 : 0);
     // console.log(resultado);
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.data);
@@ -102,6 +102,12 @@ export function CustomLineChart({ initialInvestiment }: { initialInvestiment: nu
             daysToSubtract = 365 * 2;
         } else if (timeRange === "5y") {
             daysToSubtract = 365 * 5;
+        } else if (timeRange === "10y") {
+            daysToSubtract = 365 * 10;
+        } else if (timeRange === "15y") {
+            daysToSubtract = 365 * 15;
+        } else if (timeRange === "20y") {
+            daysToSubtract = 365 * 20;
         }
         now.setDate(now.getDate() - daysToSubtract);
         return date >= now;
@@ -128,10 +134,19 @@ export function CustomLineChart({ initialInvestiment }: { initialInvestiment: nu
                             Last 1 year
                         </SelectItem>
                         <SelectItem value="2y" className="rounded-lg">
-                            Last 2 yeas
+                            Last 2 years
                         </SelectItem>
                         <SelectItem value="5y" className="rounded-lg">
-                            Last 5 yeas
+                            Last 5 years
+                        </SelectItem>
+                        <SelectItem value="10y" className="rounded-lg">
+                            Last 10 years
+                        </SelectItem>
+                        <SelectItem value="15y" className="rounded-lg">
+                            Last 15 years
+                        </SelectItem>
+                        <SelectItem value="20y" className="rounded-lg">
+                            Last 20 years
                         </SelectItem>
                     </SelectContent>
                 </Select>
