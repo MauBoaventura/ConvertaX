@@ -36,6 +36,10 @@ const chartConfig = {
         label: "Inicial",
         color: "hsl(var(--chart-1))",
     },
+    valorBrutoInvestido: {
+        label: "Bruto",
+        color: "hsl(var(--chart-3))",
+    },
 } satisfies ChartConfig
 
 export function CustomLineShortChart({ data }: { data: FormSchemaType }) {
@@ -164,6 +168,13 @@ export function CustomLineShortChart({ data }: { data: FormSchemaType }) {
                             fill="none"
                             stroke="var(--color-inicial)"
                             stackId="a"
+                        />
+                        <Area
+                            dataKey="valorBrutoInvestido"
+                            type="natural"
+                            fill="none"
+                            stroke="var(--color-inicial)"
+                            stackId="c"
                         />
                         {/* <ChartLegend content={<ChartLegendContent />} /> */}
                     </AreaChart>
