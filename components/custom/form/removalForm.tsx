@@ -28,31 +28,23 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { toast } from "@/components/ui/use-toast"
-import { useEffect } from "react"
-
-export type FormSchemaType = z.infer<typeof FormSchema>;
 
 // Define schema for withdrawal form
-const FormSchema = z.object({
+export const FormSchemaValidade = z.object({
     dataRetirada: z.date().min(new Date(), {
         message: "A data de retirada não pode estar no passado.",
     }),
     valorRetirado: z.number().min(0, {
         message: "O valor a ser retirado deve ser não negativo.",
     }),
-})
+});
 
-export function RemovalForm({ data, setData }: { data: FormSchemaType, setData: any }) {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        defaultValues: {
-            dataRetirada: new Date(),
-            valorRetirado: 0,
-        },
-    })
+export type FormSchemaType = z.infer<typeof FormSchemaValidade>;
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        setData(data)
+export function RemovalForm({ data, setData, form }: { data: FormSchemaType[], setData: any, form: any }) {
+
+    function onSubmit(dataR: z.infer<typeof FormSchemaValidade>) {
+        setData([...data, { ...dataR }])
         toast({
             title: "Você enviou os seguintes valores:",
             description: (
@@ -61,21 +53,10 @@ export function RemovalForm({ data, setData }: { data: FormSchemaType, setData: 
                 </pre>
             ),
         })
-        const datesRemovalArray = JSON.parse(localStorage.getItem("datesRemovalArray") || "[]");
-        datesRemovalArray.push({ ...data });
-        localStorage.setItem("datesRemovalArray", JSON.stringify(datesRemovalArray));
+        const dateRemoval = JSON.parse(localStorage.getItem("dateRemoval") || "[]");
+        dateRemoval.push({ ...dataR });
+        localStorage.setItem("dateRemoval", JSON.stringify(dateRemoval));
     }
-
-    useEffect(() => {
-        const subscription = form.watch((value) => {
-            if (value && value.valorRetirado && value.valorRetirado < 0 || isNaN(value.valorRetirado as number)) value.valorRetirado = 0
-            if (value && value.dataRetirada && value.dataRetirada < new Date()) value.dataRetirada = new Date();
-            
-            setData({ ...data, valorRetirado: value.valorRetirado, dataRetirada: value.dataRetirada })
-        });
-
-        return () => subscription.unsubscribe();
-    }, [form]);
 
     return (
         <Form {...form}>
@@ -115,8 +96,8 @@ export function RemovalForm({ data, setData }: { data: FormSchemaType, setData: 
                                             date < new Date() || date < new Date("1900-01-01")
                                         }
                                         initialFocus
-                                        fromYear={1960}
-                                        toYear={2024}
+                                        fromYear={2024}
+                                        toYear={2060}
                                     />
                                 </PopoverContent>
                             </Popover>
