@@ -9,9 +9,9 @@ import { use, useEffect, useState } from "react";
 export default function Investimento() {
   const [data, setData] = useState<FormSchemaType>({ initialValue: 100 } as FormSchemaType)
 
-  useEffect(() => {
-    console.log('data> ', data)
-  }, [data])
+  // useEffect(() => {
+  //   console.log('data> ', data)
+  // }, [data])
   return (
     <div className="flex justify-center">
       <div className="flex flex-col justify-center w-[60vw] p-8 gap-4">
