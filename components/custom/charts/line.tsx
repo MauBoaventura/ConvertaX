@@ -47,10 +47,8 @@ export function CustomLineChart({ data }: { data: FormSchemaType }) {
 
     const investimentoInicial = initialInvestiment ?? 1000.00;
     const dataInicial = formatarData(creationDate) ?? '2024-07-01';
-    const meses = 24;
-    console.log(mounthlydeposit )
-    const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : timeRange === "5y" ? 60 : timeRange === "10y" ? 120 : timeRange === "15y" ? 180 : timeRange === "20y" ? 240 : 0, mounthlydeposit);
-    console.log('chartData> ', chartData)
+    const meses = timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : timeRange === "5y" ? 60 : timeRange === "10y" ? 120 : timeRange === "15y" ? 180 : timeRange === "20y" ? 240 : 0;
+    const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, meses, mounthlydeposit);
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.data);
         const now = new Date();

@@ -78,7 +78,7 @@ export function InvestmentCompostForm({ data, setData }: { data: FormSchemaType,
         const subscription = form.watch((value) => {
             if (value && (value.initialValue ?? 0) < 0 || isNaN(value.initialValue as number)) value.initialValue = 0
             if (value && (value.monthlyDeposit ?? 0) < 0 || isNaN(value.monthlyDeposit as number)) value.monthlyDeposit = 0
-            if(value && value.creationDate && value.creationDate > new Date()) value.creationDate = new Date()
+            if (value && value.creationDate && value.creationDate > new Date() || !value.creationDate) value.creationDate = new Date();
             setData({ ...data, initialValue: value.initialValue, monthlyDeposit: value.monthlyDeposit, creationDate: value.creationDate})
         });
 

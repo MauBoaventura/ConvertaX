@@ -21,6 +21,7 @@ export function calcularJurosCompostos(
     valor: number,
     data: Date,
     mesesRestantes: number,
+    valorBruto: number,
     resultado: ResultadoInvestimento[] = []
   ): ResultadoInvestimento[] {
     if (mesesRestantes === 0) {
@@ -28,17 +29,19 @@ export function calcularJurosCompostos(
     }
 
     const novoValor = (valor + mounthlydeposit) * (1 + taxa);
+    const novoValorBruto = (valorBruto + mounthlydeposit);
     const novaData = new Date(data);
     novaData.setMonth(novaData.getMonth() + 1);
     resultado.push({
       data: formatarData(novaData),
       valorReajustado: parseFloat(novoValor.toFixed(2)),
+      valorBrutoInvestido: parseFloat((valorBruto + mounthlydeposit).toFixed(2)),
       inicial: valorInicial,
     });
 
-    return calcular(novoValor, novaData, mesesRestantes - 1, resultado);
+    return calcular(novoValor, novaData, mesesRestantes - 1, novoValorBruto, resultado);
   }
 
   const dataInicialDate = new Date(dataInicial);
-  return calcular(valorInicial, dataInicialDate, meses);
+  return calcular(valorInicial, dataInicialDate, meses, valorInicial);
 }
