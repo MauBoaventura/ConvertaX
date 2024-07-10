@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Projeto de Investimentos
 
-First, run the development server:
+Este é um projeto desenvolvido com Next.js, Tailwind CSS e Shadcn para gerar componentes e gráficos.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Funcionalidades Principais
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Compostos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Descrição**: Simula e cria aplicações de investimentos compostos com depósitos mensais.
+- **Funcionalidades**:
+  - Simulação de investimentos compostos.
+  - Criação de novas aplicações com configuração de depósitos mensais.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Investimentos
 
-## Learn More
+- **Descrição**: Simula e cria aplicações de investimentos sem depósitos mensais.
+- **Funcionalidades**:
+  - Simulação de investimentos sem depósitos mensais.
 
-To learn more about Next.js, take a look at the following resources:
+### Dashboard
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Descrição**: Exibe a listagem dos investimentos criados.
+- **Funcionalidades**:
+  - Visualização dos investimentos registrados.
+  - Estatísticas e gráficos relacionados aos investimentos.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Retirada
 
-## Deploy on Vercel
+- **Descrição**: Simula o impacto das retiradas em investimentos.
+- **Funcionalidades**:
+  - Simulação de retiradas para avaliação de impacto nos investimentos.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tecnologias Utilizadas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Next.js**: Framework React para aplicações web.
+- **Tailwind CSS**: Framework CSS utilitário para estilização.
+- **Shadcn**: Biblioteca para geração de componentes e gráficos.
+
+## Instalação e Uso
+
+1. **Clonar o repositório**:
+   ```bash
+   git clone https://github.com/seu-usuario/nome-do-repositorio.git
+   cd nome-do-repositorio
+   ```
+
+2. **Instalar dependências**:
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
+
+3. **Rodar a aplicação**:
+   ```bash
+   npm run dev
+   # ou
+   yarn dev
+   ```
+
+4. **Acessar a aplicação**:
+   Abrir o navegador e acessar `http://localhost:3000`.
+
+## Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para enviar pull requests ou abrir issues com sugestões, correções de bugs, ou novas funcionalidades.
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](https://opensource.org/licenses/MIT).
