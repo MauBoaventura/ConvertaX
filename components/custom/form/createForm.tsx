@@ -70,6 +70,7 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
     useEffect(() => {
         // Observar alterações no valor inicial
         const subscription = form.watch((value) => {
+            if(value && (value.initialValue ?? 0) < 0  || isNaN(value.initialValue as number)) value.initialValue = 0
             setData({...data, initialValue: value.initialValue})
         });
 
