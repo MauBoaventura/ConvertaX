@@ -1,12 +1,10 @@
-import { CustomLineChart } from "@/components/custom/charts/line";
-import { InvestmentForm } from "@/components/custom/form/createForm";
-import Image from "next/image";
+import CardInvestiment from "@/components/custom/cards/cardInvestiment";
 
 export default function Home() {
+
   return (
-    <>
-      <CustomLineChart />
-      <InvestmentForm />
-    </>
+    <div className="flex justify-center items-center">
+      <CardInvestiment />
+    </div>
   );
 }

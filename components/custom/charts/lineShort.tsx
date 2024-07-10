@@ -7,26 +7,25 @@ import {
     Card,
     CardContent,
     CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import {
     ChartConfig,
     ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { FormSchemaType } from "../form/compostForm"
+import { Button } from "@/components/ui/button"
 import { calcularJurosCompostos, formatarData } from "@/lib/utils"
+
+interface ResultadoInvestimento {
+    data: string;
+    valorReajustado: number;
+    inicial: number;
+}
 
 const chartConfig = {
     valorReajustado: {
@@ -43,16 +42,17 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function CustomLineChart({ data }: { data: FormSchemaType }) {
+export function CustomLineShortChart({ data }: { data: FormSchemaType }) {
     const { initialValue: initialInvestiment, monthlyDeposit: mounthlydeposit, creationDate } = data
     const [timeRange, setTimeRange] = React.useState("1y")
 
-
+    console.log('data> ', data)
 
     const investimentoInicial = initialInvestiment ?? 1000.00;
     const dataInicial = formatarData(creationDate) ?? '2024-07-01';
     const meses = timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : timeRange === "5y" ? 60 : timeRange === "10y" ? 120 : timeRange === "15y" ? 180 : timeRange === "20y" ? 240 : 0;
     const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, meses, mounthlydeposit);
+
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.data);
         const now = new Date();
@@ -76,46 +76,15 @@ export function CustomLineChart({ data }: { data: FormSchemaType }) {
 
     return (
         <Card>
-            <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-                <div className="grid flex-1 gap-1 text-center sm:text-left">
-                    <CardTitle>Grafico Interativo</CardTitle>
-                    <CardDescription>
-                        Previsao de investimento de R$ {investimentoInicial} em {meses} meses
-                    </CardDescription>
-                </div>
-                <Select value={timeRange} onValueChange={setTimeRange}>
-                    <SelectTrigger
-                        className="w-[160px] rounded-lg sm:ml-auto"
-                        aria-label="Select a value"
-                    >
-                        <SelectValue placeholder="Last 3 months" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                        <SelectItem value="1y" className="rounded-lg">
-                            Last 1 year
-                        </SelectItem>
-                        <SelectItem value="2y" className="rounded-lg">
-                            Last 2 years
-                        </SelectItem>
-                        <SelectItem value="5y" className="rounded-lg">
-                            Last 5 years
-                        </SelectItem>
-                        <SelectItem value="10y" className="rounded-lg">
-                            Last 10 years
-                        </SelectItem>
-                        <SelectItem value="15y" className="rounded-lg">
-                            Last 15 years
-                        </SelectItem>
-                        <SelectItem value="20y" className="rounded-lg">
-                            Last 20 years
-                        </SelectItem>
-                    </SelectContent>
-                </Select>
-            </CardHeader>
+            <CardTitle className="p-4">Proprietário: {data.owner}</CardTitle>
+            <CardDescription className="text-sm font-semibold px-4">Data inicio: {new Date(data.creationDate).toLocaleDateString("pt-BR", { month: "short", year: "numeric", })} </CardDescription>
+            <CardDescription className="text-sm font-semibold px-4"> Investimento inicial - R$ {data.initialValue}</CardDescription>
+            <CardDescription className="text-sm font-semibold px-4"> Depositos Mensais - R$ {data.monthlyDeposit}</CardDescription>
+            <CardDescription className="text-sm font-semibold px-4"> Rendimentos em 12 meses - R$ {filteredData[filteredData.length - 1]?.valorReajustado}</CardDescription>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-auto h-[250px] w-full"
+                    className="aspect-auto h-[150px]"
                 >
                     <AreaChart data={filteredData}>
                         <defs>
@@ -207,10 +176,19 @@ export function CustomLineChart({ data }: { data: FormSchemaType }) {
                             stroke="var(--color-inicial)"
                             stackId="c"
                         />
-                        <ChartLegend content={<ChartLegendContent />} />
+                        {/* <ChartLegend content={<ChartLegendContent />} /> */}
                     </AreaChart>
                 </ChartContainer>
+                <div className="flex flex-col">
+                    <span className="text-xs my-4">
+                        *Previsão para os proximos 12 meses
+                    </span>
+                    <Button type="submit">Retirada</Button>
+                </div>
+
             </CardContent>
+            {/* <CardFooter className="text-sm p-4">
+            </CardFooter> */}
         </Card>
     )
 }

@@ -43,14 +43,18 @@ const FormSchema = z.object({
     initialValue: z.number().min(0, {
         message: "O valor inicial deve ser não negativo.",
     }),
+    monthlyDeposit: z.number().min(0, {
+        message: "O depósito mensal deve ser não negativo.",
+    }),
 })
 
-export function InvestmentForm({ data, setData }: { data: FormSchemaType, setData: any }) {
+export function InvestmentCompostForm({ data, setData }: { data: FormSchemaType, setData: any }) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             owner: "",
             initialValue: 100,
+            monthlyDeposit: 0,
         },
     })
 
@@ -65,18 +69,17 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
             ),
         })
         const formDataArray = JSON.parse(localStorage.getItem("formDataArray") || "[]");
-        formDataArray.push({ ...data, monthlyDeposit: 0 });
+        formDataArray.push(data);
         localStorage.setItem("formDataArray", JSON.stringify(formDataArray));
-
     }
 
     useEffect(() => {
         // Observar alterações no valor inicial
         const subscription = form.watch((value) => {
             if (value && (value.initialValue ?? 0) < 0 || isNaN(value.initialValue as number)) value.initialValue = 0
+            if (value && (value.monthlyDeposit ?? 0) < 0 || isNaN(value.monthlyDeposit as number)) value.monthlyDeposit = 0
             if (value && value.creationDate && value.creationDate > new Date() || !value.creationDate) value.creationDate = new Date();
-            
-            setData({ ...data, initialValue: value.initialValue, creationDate: value.creationDate })
+            setData({ ...data, initialValue: value.initialValue, monthlyDeposit: value.monthlyDeposit, creationDate: value.creationDate})
         });
 
         // Limpar a assinatura ao desmontar
@@ -149,8 +152,6 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
                         <FormItem>
                             <FormLabel>Valor Inicial</FormLabel>
                             <FormControl>
-                                {/* <Input type="number" min="0" placeholder="0.00" {...field}
-                                    onChange={(e) => field.onChange(parseFloat(e.target.value))} /> */}
                                 <Input
                                     type="number"
                                     step="0.0001"
@@ -162,6 +163,29 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
                             </FormControl>
                             <FormDescription>
                                 Insira o valor inicial (não negativo).
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="monthlyDeposit"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Depósito Mensal</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="number"
+                                    step="0.0001"
+                                    min="0"
+                                    placeholder="0.00"
+                                    {...field}
+                                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                Insira o valor do depósito mensal (não negativo).
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
