@@ -43,7 +43,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function CustomLineChart({ initialInvestiment }: { initialInvestiment: number }) {
+export function CustomLineChart({ initialInvestiment, mounthlydeposit}: { initialInvestiment: number, mounthlydeposit: number}) {
     const [timeRange, setTimeRange] = React.useState("1y")
 
 
@@ -70,13 +70,12 @@ export function CustomLineChart({ initialInvestiment }: { initialInvestiment: nu
                 return resultado;
             }
 
-            const novoValor = valor * (1 + taxa);
+            const novoValor = (valor + mounthlydeposit) * (1 + taxa);
             const novaData = new Date(data);
             novaData.setMonth(novaData.getMonth() + 1);
-
             resultado.push({
                 data: formatarData(novaData),
-                valorReajustado: parseFloat(valor.toFixed(2)),
+                valorReajustado: parseFloat((valor + mounthlydeposit).toFixed(2)),
                 inicial: valorInicial
             });
 
@@ -91,7 +90,7 @@ export function CustomLineChart({ initialInvestiment }: { initialInvestiment: nu
     const meses = 24;
 
     const chartData = calcularJurosCompostos(investimentoInicial, dataInicial, timeRange === "1y" ? 12 : timeRange === "2y" ? 24 : timeRange === "5y" ? 60 : timeRange === "10y" ? 120 : timeRange === "15y" ? 180 : timeRange === "20y" ? 240 : 0);
-    // console.log(resultado);
+    
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.data);
         const now = new Date();

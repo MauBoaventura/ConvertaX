@@ -15,7 +15,7 @@ export default function Investimento() {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col justify-center w-[60vw] p-8 gap-4">
-        <CustomLineChart initialInvestiment={data.initialValue} />
+        <CustomLineChart initialInvestiment={data.initialValue} mounthlydeposit={0}/>
         <div className="flex">
           <div className="w-[80%] ">
             <InvestmentForm data={data} setData={setData} />

@@ -43,6 +43,9 @@ const FormSchema = z.object({
     initialValue: z.number().min(0, {
         message: "O valor inicial deve ser não negativo.",
     }),
+    monthlyDeposit: z.number().min(0, {
+        message: "O depósito mensal deve ser não negativo.",
+    }),
 })
 
 export function InvestmentCompostForm({ data, setData}: { data: FormSchemaType, setData: any}) {
@@ -51,6 +54,7 @@ export function InvestmentCompostForm({ data, setData}: { data: FormSchemaType, 
         defaultValues: {
             owner: "",
             initialValue: 100,
+            monthlyDeposit: 0,
         },
     })
 
@@ -70,7 +74,7 @@ export function InvestmentCompostForm({ data, setData}: { data: FormSchemaType, 
     useEffect(() => {
         // Observar alterações no valor inicial
         const subscription = form.watch((value) => {
-            setData({...data, initialValue: value.initialValue})
+            setData({...data, initialValue: value.initialValue, monthlyDeposit: value.monthlyDeposit})
         });
 
         // Limpar a assinatura ao desmontar
@@ -143,8 +147,6 @@ export function InvestmentCompostForm({ data, setData}: { data: FormSchemaType, 
                         <FormItem>
                             <FormLabel>Valor Inicial</FormLabel>
                             <FormControl>
-                                {/* <Input type="number" min="0" placeholder="0.00" {...field}
-                                    onChange={(e) => field.onChange(parseFloat(e.target.value))} /> */}
                                 <Input
                                     type="number"
                                     step="0.0001"
@@ -156,6 +158,29 @@ export function InvestmentCompostForm({ data, setData}: { data: FormSchemaType, 
                             </FormControl>
                             <FormDescription>
                                 Insira o valor inicial (não negativo).
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="monthlyDeposit"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Depósito Mensal</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="number"
+                                    step="0.0001"
+                                    min="0"
+                                    placeholder="0.00"
+                                    {...field}
+                                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                Insira o valor do depósito mensal (não negativo).
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
