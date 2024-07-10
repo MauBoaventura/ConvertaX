@@ -32,25 +32,22 @@ import { useEffect } from "react"
 
 export type FormSchemaType = z.infer<typeof FormSchema>;
 
-// Define schema for investment form
+// Define schema for withdrawal form
 const FormSchema = z.object({
-    owner: z.string().min(2, {
-        message: "O proprietário deve ter pelo menos 2 caracteres.",
+    dataRetirada: z.date().min(new Date(), {
+        message: "A data de retirada não pode estar no passado.",
     }),
-    creationDate: z.date().max(new Date(), {
-        message: "A data de criação não pode estar no futuro.",
-    }),
-    initialValue: z.number().min(0, {
-        message: "O valor inicial deve ser não negativo.",
+    valorRetirado: z.number().min(0, {
+        message: "O valor a ser retirado deve ser não negativo.",
     }),
 })
 
-export function InvestmentForm({ data, setData }: { data: FormSchemaType, setData: any }) {
+export function RemovalForm({ data, setData }: { data: FormSchemaType, setData: any }) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            owner: "",
-            initialValue: 100,
+            dataRetirada: new Date(),
+            valorRetirado: 0,
         },
     })
 
@@ -64,49 +61,31 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
                 </pre>
             ),
         })
-        const formDataArray = JSON.parse(localStorage.getItem("formDataArray") || "[]");
-        formDataArray.push({ ...data, monthlyDeposit: 0 });
-        localStorage.setItem("formDataArray", JSON.stringify(formDataArray));
-
+        const datesRemovalArray = JSON.parse(localStorage.getItem("datesRemovalArray") || "[]");
+        datesRemovalArray.push({ ...data });
+        localStorage.setItem("datesRemovalArray", JSON.stringify(datesRemovalArray));
     }
 
     useEffect(() => {
-        // Observar alterações no valor inicial
         const subscription = form.watch((value) => {
-            if (value && (value.initialValue ?? 0) < 0 || isNaN(value.initialValue as number)) value.initialValue = 0
-            if (value && value.creationDate && value.creationDate > new Date() || !value.creationDate) value.creationDate = new Date();
+            if (value && value.valorRetirado && value.valorRetirado < 0 || isNaN(value.valorRetirado as number)) value.valorRetirado = 0
+            if (value && value.dataRetirada && value.dataRetirada < new Date()) value.dataRetirada = new Date();
             
-            setData({ ...data, initialValue: value.initialValue, creationDate: value.creationDate })
+            setData({ ...data, valorRetirado: value.valorRetirado, dataRetirada: value.dataRetirada })
         });
 
-        // Limpar a assinatura ao desmontar
         return () => subscription.unsubscribe();
     }, [form]);
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
                 <FormField
                     control={form.control}
-                    name="owner"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Proprietário</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Nome do Proprietário" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Insira o nome do proprietário.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="creationDate"
+                    name="dataRetirada"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
-                            <FormLabel>Data inicial do investimento</FormLabel>
+                            <FormLabel>Data de Retirada</FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
@@ -133,7 +112,7 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
                                         selected={field.value}
                                         onSelect={field.onChange}
                                         disabled={(date) =>
-                                            date > new Date() || date < new Date("1900-01-01")
+                                            date < new Date() || date < new Date("1900-01-01")
                                         }
                                         initialFocus
                                         fromYear={1960}
@@ -147,16 +126,14 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
                 />
                 <FormField
                     control={form.control}
-                    name="initialValue"
+                    name="valorRetirado"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Valor Inicial</FormLabel>
+                            <FormLabel>Valor a Ser Retirado</FormLabel>
                             <FormControl>
-                                {/* <Input type="number" min="0" placeholder="0.00" {...field}
-                                    onChange={(e) => field.onChange(parseFloat(e.target.value))} /> */}
                                 <Input
                                     type="number"
-                                    step="0.0001"
+                                    step="0.01"
                                     min="0"
                                     placeholder="0.00"
                                     {...field}
@@ -164,7 +141,7 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
                                 />
                             </FormControl>
                             <FormDescription>
-                                Insira o valor inicial (não negativo).
+                                Insira o valor a ser retirado (não negativo).
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

@@ -68,4 +68,6 @@
     }
   }
 
-  
+  .rdp-vhidden {
+    @apply hidden;
+  }
