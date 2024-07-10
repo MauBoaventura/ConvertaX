@@ -45,7 +45,7 @@ const FormSchema = z.object({
     }),
 })
 
-export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData: any}) {
+export function InvestmentForm({ data, setData }: { data: FormSchemaType, setData: any }) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -64,14 +64,18 @@ export function InvestmentForm({ data, setData}: { data: FormSchemaType, setData
                 </pre>
             ),
         })
+        const formDataArray = JSON.parse(localStorage.getItem("formDataArray") || "[]");
+        formDataArray.push({ ...data, monthlyDeposit: 0 });
+        localStorage.setItem("formDataArray", JSON.stringify(formDataArray));
 
     }
 
     useEffect(() => {
         // Observar alterações no valor inicial
         const subscription = form.watch((value) => {
-            if(value && (value.initialValue ?? 0) < 0  || isNaN(value.initialValue as number)) value.initialValue = 0
-            setData({...data, initialValue: value.initialValue})
+            if (value && (value.initialValue ?? 0) < 0 || isNaN(value.initialValue as number)) value.initialValue = 0
+            if (value && value.creationDate && value.creationDate > new Date()) value.creationDate = new Date()
+            setData({ ...data, initialValue: value.initialValue, creationDate: value.creationDate})
         });
 
         // Limpar a assinatura ao desmontar

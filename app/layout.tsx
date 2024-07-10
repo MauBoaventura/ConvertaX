@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/themes-provider";
 import Navbar from "@/components/custom/navbar/navbar";
+import { ModeToggle } from "@/components/custom/modeToggle/modeToggle";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,8 +27,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-      <Navbar />
-      {children}
+          <Navbar />
+          {children}
+          <div className="fixed bottom-4 right-4">
+            <ModeToggle />
+          </div>
         </ThemeProvider>
         <Toaster />
       </body>

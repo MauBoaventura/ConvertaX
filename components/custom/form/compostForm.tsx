@@ -48,7 +48,7 @@ const FormSchema = z.object({
     }),
 })
 
-export function InvestmentCompostForm({ data, setData}: { data: FormSchemaType, setData: any}) {
+export function InvestmentCompostForm({ data, setData }: { data: FormSchemaType, setData: any }) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -68,15 +68,18 @@ export function InvestmentCompostForm({ data, setData}: { data: FormSchemaType, 
                 </pre>
             ),
         })
-
+        const formDataArray = JSON.parse(localStorage.getItem("formDataArray") || "[]");
+        formDataArray.push(data);
+        localStorage.setItem("formDataArray", JSON.stringify(formDataArray));
     }
 
     useEffect(() => {
         // Observar alterações no valor inicial
         const subscription = form.watch((value) => {
-            if(value && (value.initialValue ?? 0) < 0  || isNaN(value.initialValue as number)) value.initialValue = 0
-            if(value && (value.monthlyDeposit ?? 0) < 0 || isNaN(value.monthlyDeposit as number)) value.monthlyDeposit = 0
-            setData({...data, initialValue: value.initialValue, monthlyDeposit: value.monthlyDeposit})
+            if (value && (value.initialValue ?? 0) < 0 || isNaN(value.initialValue as number)) value.initialValue = 0
+            if (value && (value.monthlyDeposit ?? 0) < 0 || isNaN(value.monthlyDeposit as number)) value.monthlyDeposit = 0
+            if(value && value.creationDate && value.creationDate > new Date()) value.creationDate = new Date()
+            setData({ ...data, initialValue: value.initialValue, monthlyDeposit: value.monthlyDeposit, creationDate: value.creationDate})
         });
 
         // Limpar a assinatura ao desmontar
