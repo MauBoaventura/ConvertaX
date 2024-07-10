@@ -13,10 +13,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { calcularJurosCompostos, formatarData } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
-export default function Investimento({ initialValues }: { initialValues: FormSchemaType }) {
-  const [data, setData] = useState<FormSchemaType>({ initialValue: 100, monthlyDeposit: 0, creationDate: new Date() } as FormSchemaType)
+export default function Investimento() {
+  const router = useRouter();
+
+  const searchParams = useSearchParams()
+  const dataState = searchParams.get('dataState')
+  const initialValues = dataState ? JSON.parse(decodeURIComponent(dataState as string)) : { initialValue: 100, monthlyDeposit: 0, creationDate: new Date() };
+  initialValues.creationDate = new Date(initialValues.creationDate);
+  // const [dataState, setDataState] = useState<FormSchemaType>(initialValues);
+
+  const [data, setData] = useState<FormSchemaType>(initialValues as FormSchemaType)
   const [dateRemoval, setDateRemoval] = useState<FormSchemaRemovalType[]>([] as FormSchemaRemovalType[])
   const [timeRange, setTimeRange] = React.useState("1y")
 
@@ -28,7 +37,6 @@ export default function Investimento({ initialValues }: { initialValues: FormSch
         valorRetirado: item.valorRetirado
       }
     }))
-    initialValues && setData(initialValues)
   }, [])
   const form = useForm<z.infer<typeof FormSchemaValidade>>({
     resolver: zodResolver(FormSchemaValidade),
@@ -66,13 +74,13 @@ export default function Investimento({ initialValues }: { initialValues: FormSch
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col justify-center w-[60vw] p-8 gap-4">
+      <div className="flex flex-col justify-center w-full lg:w-[60vw] p-8 gap-4">
         <CustomLineRemovalChart data={data} filteredData={filteredData} meses={meses} timeRange={timeRange} setTimeRange={setTimeRange} />
-        <div className="flex">
-          <div className="w-[80%] ">
+        <div className="flex flex-col lg:flex-row">
+          <div className="lg:w-[80%] ">
             <RemovalForm data={dateRemoval} setData={setDateRemoval} form={form} />
           </div>
-          <div className="w-[50%]">
+          <div className="lg:w-[50%]">
             <ListRemoval data={dateRemoval} investiment={data} />
           </div>
         </div>

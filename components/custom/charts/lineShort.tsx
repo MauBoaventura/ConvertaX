@@ -20,6 +20,7 @@ import {
 import { FormSchemaType } from "../form/compostForm"
 import { Button } from "@/components/ui/button"
 import { calcularJurosCompostos, formatarData } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 interface ResultadoInvestimento {
     data: string;
@@ -37,7 +38,7 @@ const chartConfig = {
         color: "hsl(var(--chart-1))",
     },
     valorBrutoInvestido: {
-        label: "Bruto",
+        label: "Deposito",
         color: "hsl(var(--chart-3))",
     },
 } satisfies ChartConfig
@@ -46,7 +47,12 @@ export function CustomLineShortChart({ data }: { data: FormSchemaType }) {
     const { initialValue: initialInvestiment, monthlyDeposit: mounthlydeposit, creationDate } = data
     const [timeRange, setTimeRange] = React.useState("1y")
 
-    console.log('data> ', data)
+    const router = useRouter();
+
+    const handleButtonClick = () => {
+        const dataString = JSON.stringify(data);
+        router.push(`/retirada?dataState=${encodeURIComponent(dataString)}`);
+    };
 
     const investimentoInicial = initialInvestiment ?? 1000.00;
     const dataInicial = formatarData(creationDate) ?? '2024-07-01';
@@ -173,7 +179,7 @@ export function CustomLineShortChart({ data }: { data: FormSchemaType }) {
                             dataKey="valorBrutoInvestido"
                             type="natural"
                             fill="none"
-                            stroke="var(--color-inicial)"
+                            stroke="var(--color-brutoInvestido)"
                             stackId="c"
                         />
                         {/* <ChartLegend content={<ChartLegendContent />} /> */}
@@ -183,7 +189,7 @@ export function CustomLineShortChart({ data }: { data: FormSchemaType }) {
                     <span className="text-xs my-4">
                         *Previsão para os proximos 12 meses
                     </span>
-                    <Button type="submit">Retirada</Button>
+                    <Button type="submit" onClick={handleButtonClick}>Retirada</Button>
                 </div>
 
             </CardContent>

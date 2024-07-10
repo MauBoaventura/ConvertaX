@@ -40,7 +40,7 @@ const chartConfig = {
         color: "hsl(var(--chart-1))",
     },
     valorBrutoInvestido: {
-        label: "Bruto",
+        label: "Deposito",
         color: "hsl(var(--chart-3))",
     },
 } satisfies ChartConfig
