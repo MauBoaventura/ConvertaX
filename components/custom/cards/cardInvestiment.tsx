@@ -22,7 +22,7 @@ export default function CardInvestiment() {
             return { ...data, creationDate: (new Date(data.creationDate)) }
         })
         setFormDataArray(storedFormDataArray);
-        console.log('formDataArray> ', storedFormDataArray)
+        // console.log('formDataArray> ', storedFormDataArray)
     }, [])
 
     return (

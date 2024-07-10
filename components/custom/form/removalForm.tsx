@@ -46,11 +46,9 @@ export function RemovalForm({ data, setData, form }: { data: FormSchemaType[], s
     function onSubmit(dataR: z.infer<typeof FormSchemaValidade>) {
         setData([...data, { ...dataR }])
         toast({
-            title: "Você enviou os seguintes valores:",
+            title: "Salvo",
             description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
+                <></>
             ),
         })
         const dateRemoval = JSON.parse(localStorage.getItem("dateRemoval") || "[]");

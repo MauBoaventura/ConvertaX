@@ -57,11 +57,9 @@ export function InvestmentForm({ data, setData }: { data: FormSchemaType, setDat
     function onSubmit(data: z.infer<typeof FormSchema>) {
         setData(data)
         toast({
-            title: "Você enviou os seguintes valores:",
+            title: "Salvo",
             description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
+                <></>
             ),
         })
         const formDataArray = JSON.parse(localStorage.getItem("formDataArray") || "[]");

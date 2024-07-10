@@ -3,4 +3,6 @@ export interface ResultadoInvestimento {
     valorReajustado: number;
     valorBrutoInvestido: number;
     inicial: number;
+    jurosSaque: number;
+    tipoEncargo: number;
   }

@@ -30,11 +30,12 @@ export function calcularJurosCompostos(
     data: Date,
     mesesRestantes: number,
     valorBruto: number,
-    resultado: ResultadoInvestimento[] = []
+    resultado: ResultadoInvestimento[] = [],
+    jurosSaque: number = 0
   ): ResultadoInvestimento[] {
     if (mesesRestantes === 0) {
       return resultado;
-    } 
+    }
 
     const retirada = retiradas.find(
       (r) => r.dataRetirada.getFullYear() === data.getFullYear() && r.dataRetirada.getMonth() === data.getMonth()
@@ -42,9 +43,25 @@ export function calcularJurosCompostos(
 
     let novoValor = (valor + mounthlydeposit) * (1 + taxa);
     let novoValorBruto = valorBruto + mounthlydeposit;
+    let valorEncargo = 0;
+    let tipoEncargo = 0; // 0 para nenhum, 1 para menos de um ano, 2 para entre um e dois anos
 
     if (retirada) {
-      novoValor -= retirada.valorRetirado;
+      const mesesInvestidos = (data.getFullYear() - new Date(dataInicial).getFullYear()) * 12 + data.getMonth() - new Date(dataInicial).getMonth();
+
+      if (mesesInvestidos < 12) {
+        valorEncargo = retirada.valorRetirado * 0.225;
+        tipoEncargo = 1;
+      } else if (mesesInvestidos < 24) {
+        valorEncargo = retirada.valorRetirado * 0.185;
+        tipoEncargo = 2;
+      } else {
+        valorEncargo = retirada.valorRetirado * 0.15;
+        tipoEncargo = 1;
+      }
+
+      novoValor -= (retirada.valorRetirado + valorEncargo);
+      jurosSaque += valorEncargo;
     }
 
     const novaData = new Date(data);
@@ -54,9 +71,11 @@ export function calcularJurosCompostos(
       valorReajustado: parseFloat(novoValor.toFixed(2)),
       valorBrutoInvestido: parseFloat(novoValorBruto.toFixed(2)),
       inicial: valorInicial,
+      jurosSaque: parseFloat(jurosSaque.toFixed(2)),
+      tipoEncargo
     });
 
-    return calcular(novoValor, novaData, mesesRestantes - 1, novoValorBruto, resultado);
+    return calcular(novoValor, novaData, mesesRestantes - 1, novoValorBruto, resultado, jurosSaque);
   }
 
   const dataInicialDate = new Date(dataInicial);

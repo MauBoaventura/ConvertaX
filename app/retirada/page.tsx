@@ -81,7 +81,7 @@ export default function Investimento() {
             <RemovalForm data={dateRemoval} setData={setDateRemoval} form={form} />
           </div>
           <div className="lg:w-[50%]">
-            <ListRemoval data={dateRemoval} investiment={data} />
+            <ListRemoval data={dateRemoval} investiment={filteredData} />
           </div>
         </div>
       </div>
